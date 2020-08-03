@@ -1,10 +1,12 @@
 package com.example.spring91.sample;
 
+import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,13 +26,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@JsonTest
-@AutoConfigureMockMvc
+//@AutoConfigureMockMvc
+@WebMvcTest(SampleController.class)
 public class SampleControllerTest {
     @Autowired
     MockMvc mockMvc;
 //    @Autowired
 //    TestRestTemplate testRestTemplate;
-
+    @Rule
+    public  OutputCapture outputCapture = new OutputCapture();
 
     //최근 api
 //    @Autowired
@@ -48,6 +52,10 @@ public class SampleControllerTest {
 
         mockMvc.perform(get("/hello"))
                 .andExpect(content().string("hello whiteship"));
+
+        assertThat(outputCapture.toString())
+                .contains("holoman")
+                .contains("skip");
 
 //        webTestClient.get().uri("/hello").exchange().expectStatus().isOk()
 //                .expectBody(String.class).isEqualTo("hello whiteship");
